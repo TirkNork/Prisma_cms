@@ -16,10 +16,10 @@ export async function PUT(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { title, content } = await req.json()
+    const { title, content, category  } = await req.json()
     return Response.json(await prisma.post.update({
       where: { id: Number(params.id) },
-      data: { title, content },
+      data: { title, content, category  },
     }))
   } catch (error) {
     return new Response(error as BodyInit, {
