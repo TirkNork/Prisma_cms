@@ -11,7 +11,11 @@ export async function GET(req: NextRequest) {
 
   const whereCondition = category
     ? {
-        category,
+        category: {
+          is: {
+            name: category
+          }
+        },
         title: {
           contains: search,
           mode: 'insensitive',
@@ -29,7 +33,10 @@ export async function GET(req: NextRequest) {
       where: whereCondition,
       orderBy: {
         createdAt: sort,
-      },
+      } as any,
+      include: {
+        category: true
+      }
     })
     return Response.json(posts)
   } catch (error) {
@@ -41,12 +48,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: Request) {
   try {
-    const { title, content, category } = await req.json()
+    const { title, content, categoryId } = await req.json()
     const newPost = await prisma.post.create({
       data: {
         title,
         content,
-        category,
+        categoryId: Number(categoryId),
       },
     })
     return Response.json(newPost)
